@@ -1,0 +1,17 @@
+# Node.js related
+node_modules/
+npm-debug.log
+
+# TypeScript related
+dist/
+*.tsbuildinfo
+
+# Environment variables
+.env
+
+# IDE - Visual Studio Code
+.vscode/
+
+# Other unnecessary files
+.DS_Store
+

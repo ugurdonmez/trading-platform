@@ -1,0 +1,10 @@
+{
+    "tradingPairs": [
+        {
+            "symbol": "GPTUSDT",
+            "timeframe": "1h",
+            "rsiOverbought": 70,
+            "profitTarget": 0.03
+        }
+    ]
+}
