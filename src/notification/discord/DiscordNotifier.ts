@@ -1,6 +1,7 @@
-import axios from 'axios';
+import axios from "axios";
+import { INotifier } from "../INotifier";
 
-export class DiscordNotifier {
+export class DiscordNotifier implements INotifier {
     private webhookUrl: string;
 
     constructor(webhookUrl: string) {

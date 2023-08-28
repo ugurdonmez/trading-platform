@@ -1,7 +1,7 @@
 import ccxt from 'ccxt';
 import { fetch_data } from './utils/dataFetcher';
 import { calculate_rsi } from './utils/rsiCalculator';
-import { DiscordNotifier } from './utils/discordNotifier';
+import { INotifier } from './notification/INotifier';
 
 const exchange = new ccxt.bybit({
     'apiKey': 'YOUR_API_KEY',
@@ -14,9 +14,9 @@ export class Trader {
     rsiOverbought: number;
     profitTarget: number;
     entryPrice: number | null = null;
-    private notifier: DiscordNotifier;
+    private notifier: INotifier;
 
-    constructor(symbol: string, timeframe: string, rsiOverbought: number, profitTarget: number, notifier: DiscordNotifier) {
+    constructor(symbol: string, timeframe: string, rsiOverbought: number, profitTarget: number, notifier: INotifier) {
         this.symbol = symbol;
         this.timeframe = timeframe;
         this.rsiOverbought = rsiOverbought;
