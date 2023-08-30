@@ -19,7 +19,12 @@ export class RSITracker {
 
     async checkRSI() {
         const closePrices = await fetch_data(this.exchange, this.pair, this.timeframe);
+
+        console.log(closePrices);
+
         const rsiValue = calculate_rsi(closePrices, 14); 
+
+        console.log(rsiValue);
 
         if (rsiValue > this.rsiOverboughtThreshold) {
             await this.notifier.sendNotification(`RSI is overbought on ${this.pair} with value ${rsiValue}`);

@@ -12,6 +12,9 @@ dist/
 # IDE - Visual Studio Code
 .vscode/
 
+# IDE - idea
+.idea/
+
 # Other unnecessary files
 .DS_Store
 
