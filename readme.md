@@ -33,3 +33,4 @@ Monitors the RSI of a specified trading pair on the Bybit exchange and sends not
 2. **Running the RSI Tracker**:
    - run tracket.ts
 
+### INotifier Interface

@@ -1,25 +1,23 @@
-import ccxt, { Exchange } from 'ccxt';
 import { ExchangeConfig } from '../models/ExchangeConfig';
+import { ICustomExchange } from './ICustomExchange';
+import { BinanceExchange } from './binance/BinanceExchange';
+import { BybitExchange } from './bybit/BybitExchange';
 
-type ExchangeConstructor = new (config: { apiKey: string, secret: string }) => Exchange;
+type CustomExchangeConstructor = new (apiKey: string, secret: string) => ICustomExchange;
 
 export class ExchangeFactory {
-    private static exchangeMap: { [key: string]: ExchangeConstructor } = {
-        'bybit': ccxt.bybit,
-        'binance': ccxt.binance,
-        // Add other exchanges here as needed...
+    private static exchangeMap: { [key: string]: CustomExchangeConstructor } = {
+        'bybit': BybitExchange,
+        'binance': BinanceExchange,
     };
 
-    static create(config: ExchangeConfig): Exchange {
-        const ExchangeClass = this.exchangeMap[config.name.toLowerCase()];
+    static create(config: ExchangeConfig): ICustomExchange {
+        const CustomExchangeClass = this.exchangeMap[config.name.toLowerCase()];
 
-        if (!ExchangeClass) {
+        if (!CustomExchangeClass) {
             throw new Error(`Unsupported exchange: ${config.name}`);
         }
 
-        return new ExchangeClass({
-            apiKey: config.apiKey,
-            secret: config.secret
-        });
+        return new CustomExchangeClass(config.apiKey, config.secret);
     }
 }
