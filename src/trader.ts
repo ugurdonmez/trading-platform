@@ -8,6 +8,8 @@ const exchange = new ccxt.bybit({
     'secret': 'YOUR_SECRET_KEY',
 });
 
+
+// TODO: refactor this class to be more generic
 export class Trader {
     symbol: string;
     timeframe: string;

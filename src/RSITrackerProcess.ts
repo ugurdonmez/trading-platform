@@ -1,9 +1,10 @@
 import { RSITracker } from "./process/RSITracker";
 import { DiscordNotifier } from "./notification/discord/DiscordNotifier";
-
-import dotenv from 'dotenv';
 import { ExchangeFactory } from "./exchanges/ExchangeFactory";
 import { ExchangeConfig } from "./models/ExchangeConfig";
+import * as config from '../config.json';
+
+import dotenv from 'dotenv';
 dotenv.config();
 
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL!;
@@ -20,16 +21,15 @@ const bybitConfig: ExchangeConfig = {
 
 const bybitExchange = ExchangeFactory.create(bybitConfig);
 
+// TODO: get exchange also from config
+const rsiTrackers = config.rsiTrackers.map(trackerConfig => new RSITracker(trackerConfig.symbol, notifier, trackerConfig.timeframe, bybitExchange));
 
-const rsiTracker = new RSITracker("GPTUSDT", notifier, "1h", bybitExchange);
-
-async function checkRSIAndScheduleNextCheck() {
-    console.log('Checking RSI...');
-    await rsiTracker.checkRSI();
-    
-    setTimeout(checkRSIAndScheduleNextCheck, 15 * 60 * 1000);
+async function checkAllRSIs() {
+    for (const rsiTracker of rsiTrackers) {
+        console.log(`Checking RSI for ${rsiTracker.getPair()}`);
+        await rsiTracker.checkRSI();
+    }
 }
 
-// Start the process
-checkRSIAndScheduleNextCheck();
-
+setInterval(checkAllRSIs, 15 * 60 * 1000);
+checkAllRSIs();

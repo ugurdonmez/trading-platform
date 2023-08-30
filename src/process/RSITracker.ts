@@ -17,15 +17,18 @@ export class RSITracker {
         this.exchange = exchange;
     }
 
+    public getPair():string {
+        return this.pair;
+    }
+
+    // TODO: save IOLC data and fecth after last saved data
     async checkRSI() {
+        // TODO: add nice logging
+        // TODO: add error handling
         const ohlcData: IOHLCData[] = await this.exchange.fetchOHLCV(this.pair, this.timeframe);
+
         const closePrices: number[] = ohlcData.map(data => data.close);
-
-        console.log(closePrices);
-
         const rsiValue = calculate_rsi(closePrices, 14); 
-
-        console.log(rsiValue);
 
         if (rsiValue > this.rsiOverboughtThreshold) {
             await this.notifier.sendNotification(`RSI is overbought on ${this.pair} with value ${rsiValue}`);
