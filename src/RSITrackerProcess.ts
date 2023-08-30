@@ -2,7 +2,9 @@ import { RSITracker } from "./process/RSITracker";
 import { DiscordNotifier } from "./notification/discord/DiscordNotifier";
 import { ExchangeFactory } from "./exchanges/ExchangeFactory";
 import { ExchangeConfig } from "./models/ExchangeConfig";
-import * as config from '../config.json';
+import { AppConfig } from "./models/AppConfig";
+
+import * as rawConfig from '../config.json';
 
 import dotenv from 'dotenv';
 dotenv.config();
@@ -18,6 +20,8 @@ const bybitConfig: ExchangeConfig = {
     apiKey: API_KEY,
     secret: SECRET_KEY,
 };
+
+const config: AppConfig = rawConfig as AppConfig;
 
 const bybitExchange = ExchangeFactory.create(bybitConfig);
 
