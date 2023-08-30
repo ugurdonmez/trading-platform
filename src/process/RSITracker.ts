@@ -1,16 +1,16 @@
-import { Exchange } from "ccxt";
 import { INotifier } from "../notification/INotifier";
-import { fetch_data } from "../utils/dataFetcher";
 import { calculate_rsi } from "../utils/rsiCalculator";
+import { ICustomExchange } from "../exchanges/ICustomExchange";
+import { IOHLCData } from "../models/IOHLCData";
 
 export class RSITracker {
     private notifier: INotifier;
     private pair: string;
     private timeframe: string;
     private rsiOverboughtThreshold = 70;
-    private exchange: Exchange;
+    private exchange: ICustomExchange;
 
-    constructor(pair: string, notifier: INotifier, timeframe: string, exchange: Exchange) {
+    constructor(pair: string, notifier: INotifier, timeframe: string, exchange: ICustomExchange) {
         this.pair = pair;
         this.notifier = notifier;
         this.timeframe = timeframe;
@@ -18,7 +18,8 @@ export class RSITracker {
     }
 
     async checkRSI() {
-        const closePrices = await fetch_data(this.exchange, this.pair, this.timeframe);
+        const ohlcData: IOHLCData[] = await this.exchange.fetchOHLCV(this.pair, this.timeframe);
+        const closePrices: number[] = ohlcData.map(data => data.close);
 
         console.log(closePrices);
 
