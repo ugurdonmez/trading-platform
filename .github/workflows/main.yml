@@ -30,7 +30,7 @@ jobs:
       env:
         PRIVATE_KEY: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
         HOST: $VM_IP
-        USER: ${{ VM_USERNAME }}
+        USER: ${{ secrets.VM_USERNAME }}
         PATH: '~/repos/trading-platform'
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
