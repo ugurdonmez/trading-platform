@@ -1,23 +1,22 @@
 import axios from "axios";
 import { INotifier } from "../INotifier";
+import logger from "../../logger/Logger";
 
 export class DiscordNotifier implements INotifier {
     private webhookUrl: string;
 
     constructor(webhookUrl: string) {
-        console.log('Creating DiscordNotifier');
-        console.log('Webhook URL:', webhookUrl);
         this.webhookUrl = webhookUrl;
     }
 
     async sendNotification(content: string) {
-
-        // TODO: add nice logging
+        logger.info(`Sending Discord notification: ${content}`);
 
         try {
             await axios.post(this.webhookUrl, { content });
+            logger.info('Discord notification sent');
         } catch (error) {
-            console.error('Error sending Discord notification:', error);
+            logger.error('Error sending Discord notification:', error);
         }
     }
 }

@@ -7,6 +7,7 @@ import { AppConfig } from "./models/AppConfig";
 import * as rawConfig from '../config.json';
 
 import dotenv from 'dotenv';
+import logger from "./logger/Logger";
 dotenv.config();
 
 const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL!;
@@ -30,7 +31,7 @@ const rsiTrackers = config.rsiTrackers.map(trackerConfig => new RSITracker(track
 
 async function checkAllRSIs() {
     for (const rsiTracker of rsiTrackers) {
-        console.log(`Checking RSI for ${rsiTracker.getPair()}`);
+        logger.info(`Checking RSI process started for pair: ${rsiTracker.getPair()}`);
         await rsiTracker.checkRSI();
     }
 }

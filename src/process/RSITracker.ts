@@ -2,6 +2,7 @@ import { INotifier } from "../notification/INotifier";
 import { calculate_rsi } from "../utils/rsiCalculator";
 import { ICustomExchange } from "../exchanges/ICustomExchange";
 import { IOHLCData } from "../models/IOHLCData";
+import logger from "../logger/Logger";
 
 export class RSITracker {
     private notifier: INotifier;
@@ -23,14 +24,17 @@ export class RSITracker {
 
     // TODO: save IOLC data and fecth after last saved data
     async checkRSI() {
-        // TODO: add nice logging
+        logger.info(`Checking RSI for ${this.pair}`);
         // TODO: add error handling
         const ohlcData: IOHLCData[] = await this.exchange.fetchOHLCV(this.pair, this.timeframe);
 
         const closePrices: number[] = ohlcData.map(data => data.close);
-        const rsiValue = calculate_rsi(closePrices, 14); 
+        const rsiValue = calculate_rsi(closePrices, 14);
+        
+        logger.info(`RSI is ${rsiValue} on ${this.pair}`);
 
         if (rsiValue > this.rsiOverboughtThreshold) {
+            logger.info(`RSI is overbought on ${this.pair} with value ${rsiValue}`);
             await this.notifier.sendNotification(`RSI is overbought on ${this.pair} with value ${rsiValue}`);
         }
     }
