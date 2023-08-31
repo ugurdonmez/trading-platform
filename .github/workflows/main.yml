@@ -1,22 +1,31 @@
-name: Node.js CI
-
-on:
-  push:
-    branches: [ main ]
-
 jobs:
-  build:
-
+  deploy:
     runs-on: ubuntu-latest
 
-    strategy:
-      matrix:
-        node-version: [18.x]
-
     steps:
-    - uses: actions/checkout@v2
-    - name: Use Node.js ${{ matrix.node-version }}
-      uses: actions/setup-node@v2
+    - name: Checkout code
+      uses: actions/checkout@v2
+
+    - name: Setup GCP CLI
+      uses: google-github-actions/setup-gcloud@master
       with:
-        node-version: ${{ matrix.node-version }}
-    - run: yarn install
+        version: '290.0.1'
+        project_id: ${{ secrets.GCE_PROJECT }}
+        service_account_key: ${{ secrets.GCP_SA_KEY }} # Ensure you have the GCP_SA_KEY set as well
+        export_default_credentials: true
+
+    - name: Get VM IP
+      run: |
+        IP=$(gcloud compute instances describe ${{ secrets.GCE_INSTANCE }} --zone=${{ secrets.GCE_INSTANCE_ZONE }} --format="get(networkInterfaces[0].accessConfigs[0].natIP)")
+        echo "VM_IP=$IP" >> $GITHUB_ENV
+
+    - name: Deploy to GCP VM
+      env:
+        PRIVATE_KEY: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
+        HOST: $VM_IP
+        USER: your-vm-username
+      run: |
+        echo "$PRIVATE_KEY" > private_key.pem
+        chmod 600 private_key.pem
+        scp -o StrictHostKeyChecking=no -i private_key.pem ./path-to-your-build-folder $USER@$HOST:/path-on-vm-where-you-want-to-deploy
+        ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST 'commands to restart your app'
