@@ -24,12 +24,13 @@ jobs:
         PRIVATE_KEY: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
         HOST: $VM_IP
         USER: ${{ VM_USERNAME }}
+        PATH: '~/repos/trading-platform'
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -o StrictHostKeyChecking=no -i private_key.pem -r . $USER@$HOST:/path-on-vm-where-you-want-to-deploy
+        scp -o StrictHostKeyChecking=no -i private_key.pem -r . $USER@$HOST:$PATH
         ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST <<EOF
-          cd /path-on-vm-where-you-want-to-deploy
+          cd $PATH
           yarn install
           yarn ts-node src/RSITrackerProcess.ts
         EOF
