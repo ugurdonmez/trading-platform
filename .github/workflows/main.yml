@@ -40,8 +40,8 @@ jobs:
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
-        scp -o StrictHostKeyChecking=no -i private_key.pem deploy.tar.gz $USER@$HOST:$DEPLOY_PATH
-        ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@$HOST <<EOF
+        scp -o StrictHostKeyChecking=no -i private_key.pem deploy.tar.gz $USER@${{ env.VM_IP }}:$DEPLOY_PATH
+        ssh -o StrictHostKeyChecking=no -i private_key.pem $USER@${{ env.VM_IP }} <<EOF
           cd $DEPLOY_PATH
           tar -xzf deploy.tar.gz
           yarn install
