@@ -23,7 +23,7 @@ jobs:
       env:
         PRIVATE_KEY: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
         HOST: $VM_IP
-        USER: your-vm-username
+        USER: ${{ VM_USERNAME }}
       run: |
         echo "$PRIVATE_KEY" > private_key.pem
         chmod 600 private_key.pem
