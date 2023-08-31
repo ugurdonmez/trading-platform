@@ -32,6 +32,10 @@ jobs:
         IP=$(gcloud compute instances describe ${{ secrets.GCE_INSTANCE }} --zone=${{ secrets.GCE_INSTANCE_ZONE }} --format="get(networkInterfaces[0].accessConfigs[0].natIP)")
         echo "VM_IP=$IP" >> $GITHUB_ENV
 
+    - name: Compress files
+      run: |
+        tar -czf deploy.tar.gz ./
+
     - name: Deploy to GCP VM
       env:
         PRIVATE_KEY: ${{ secrets.GCP_SSH_PRIVATE_KEY }}
