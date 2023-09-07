@@ -5,6 +5,11 @@ on:
     branches:
       - main
 
+env:
+  GKE_PROJECT: coinmarketcap
+  IMAGE: gcr.io/coinmarketcap/trading-platform
+  DOCKER_IMAGE_TAG: trading-platform-${{ github.sha }}
+
 jobs:
   build-and-deploy:
     runs-on: ubuntu-latest
@@ -33,6 +38,9 @@ jobs:
 
     - name: Push Docker Image to GCR
       run: |
+        gcloud auth configure-docker
+        docker tag ${{env.IMAGE}} ${{env.IMAGE}}:${{env.DOCKER_IMAGE_TAG}}
+        docker push ${{env.IMAGE}}:${{env.DOCKER_IMAGE_TAG}}
         docker push gcr.io/${{ secrets.GCE_PROJECT }}/trading-platform:latest
 
     - name: Deploy Docker Image on GCP VM
