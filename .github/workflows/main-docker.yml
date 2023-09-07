@@ -12,7 +12,12 @@ jobs:
     steps:
     - name: Checkout code
       uses: actions/checkout@v2
-
+  
+    - name: Setup Python
+      uses: actions/setup-python@v2
+      with:
+        python-version: '3.8'
+  
     - name: Setup GCP CLI
       uses: google-github-actions/setup-gcloud@v0
       with:
@@ -20,6 +25,7 @@ jobs:
         project_id: ${{ secrets.GCE_PROJECT }}
         service_account_key: ${{ secrets.GCP_SA_KEY }}
         export_default_credentials: true
+  
 
     - name: Build Docker Image
       run: |
