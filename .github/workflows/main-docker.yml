@@ -34,7 +34,7 @@ jobs:
 
     - name: Build Docker Image
       run: |
-        docker build -t gcr.io/${{ secrets.GCE_PROJECT }}/trading-platform:latest .
+        docker build -t gcr.io/coinmarketcap/trading-platform:latest .
 
     - name: Push Docker Image to GCR
       run: |
