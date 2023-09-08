@@ -10,5 +10,5 @@ export const calculate_rsi = (closePrices: number[], rsiLength: number) => {
 
     //console.log(`RSI calculated: ${rsi}`);
 
-    return rsi[rsi.length - 1];
+    return rsi[0];
 }
