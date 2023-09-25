@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "license": "MIT",
   "scripts": {
-    "start:rsi": "ts-node src/RSITrackerProcess.ts"
+    "start:rsi": "ts-node src/cron/RSITrackerCron.ts"
   },
   "dependencies": {
     "@types/node": "^20.5.6",
