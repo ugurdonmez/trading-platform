@@ -1,5 +1,10 @@
 import axios from "axios";
 import { FundingRate, FundingRateAggregation } from "../model/funding_rate_models";
+import { DiscordNotifier } from "../../notification/discord/DiscordNotifier";
+
+const discordWebhookUrl = process.env.DISCORD_WEBHOOK_URL!;
+const notifier = new DiscordNotifier(discordWebhookUrl);
+
 
 async function getFundingRates() {
     const options = {
@@ -15,7 +20,7 @@ async function getFundingRates() {
         const response = await axios(options);
         const fundingRates: FundingRate[] = response.data.data;
 
-        let btcFundingRate = fundingRates.find(f => f.symbol === 'TRB');
+        // let btcFundingRate = fundingRates.find(f => f.symbol === 'TRB');
 
         // do it for all symbols
         fundingRates.forEach(f => {
@@ -40,8 +45,15 @@ async function getFundingRates() {
           });
         });
     
+        // sort by rate
+        aggregatedMargins.sort((a, b) => b.rate - a.rate);
+
+        // send notification to top 5 rates
+        notifier.sendNotification(JSON.stringify(aggregatedMargins.slice(0, 5)));
+
+        // send notification lowest 5 rates
+        notifier.sendNotification(JSON.stringify(aggregatedMargins.slice(-5)));
     
-        console.log(JSON.stringify (aggregatedMargins));
     } catch (error) {
         console.error(error);
     }
