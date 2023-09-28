@@ -15,7 +15,11 @@ async function getFundingRates() {
         const response = await axios(options);
         const fundingRates: FundingRate[] = response.data.data;
 
-        console.log(JSON.stringify (fundingRates));
+        const btcFundingRate = fundingRates.find(f => f.symbol === 'BTC');
+
+        console.log(JSON.stringify(btcFundingRate));
+
+        // console.log(JSON.stringify (fundingRates));
     } catch (error) {
         console.error(error);
     }
