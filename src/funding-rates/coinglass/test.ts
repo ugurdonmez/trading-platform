@@ -1,5 +1,5 @@
 import axios from "axios";
-import { FundingRate } from "../model/funding_rate_models";
+import { FundingRate, FundingRateAggregation } from "../model/funding_rate_models";
 
 async function getFundingRates() {
     const options = {
@@ -25,21 +25,23 @@ async function getFundingRates() {
             f.symbolLogo = '';
         });
 
-        // if (btcFundingRate) {
-        //     // filter out the exchanges that are not active
-        //     btcFundingRate.uMarginList = btcFundingRate.uMarginList.filter(m => m.status === 1 || m.status === 2);
+        const aggregatedMargins: FundingRateAggregation[] = [];
 
-        //     // filter only get binance bybit and okx
-        //     btcFundingRate.uMarginList = btcFundingRate.uMarginList.filter(m => m.exchangeName === 'Binance' || m.exchangeName === 'Bybit' || m.exchangeName === 'OKX');
-
-        //     console.log(JSON.stringify(btcFundingRate.uMarginList));
-        // } else {
-        //     console.log('BTC funding rate not found');
-        // }
-
-        console.log(JSON.stringify(fundingRates));
-
-        // console.log(JSON.stringify (fundingRates));
+        fundingRates.forEach((crypto: any) => {
+          crypto.uMarginList.forEach((margin: any) => {
+            const aggregatedMargin: FundingRateAggregation = {
+              symbol: crypto.symbol,
+              rate: margin.rate,
+              exchangeName: margin.exchangeName,
+              status: margin.status,
+              nextFundingTime: margin.nextFundingTime,
+            };
+            aggregatedMargins.push(aggregatedMargin);
+          });
+        });
+    
+    
+        console.log(JSON.stringify (aggregatedMargins));
     } catch (error) {
         console.error(error);
     }

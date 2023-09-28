@@ -17,3 +17,11 @@ export interface Margin {
     status: number;
     nextFundingTime: number;
 }
+
+export interface FundingRateAggregation {
+    symbol: string;
+    rate: number;
+    exchangeName: string;
+    status: number;
+    nextFundingTime?: number;
+}
